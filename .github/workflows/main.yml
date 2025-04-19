@@ -1,0 +1,42 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Asegúrate de que este es el nombre de tu rama principal
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js (opcional, si usas dependencias con Node)
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies (si las tienes)
+      run: npm install
+
+    - name: Build project (si necesitas construir el proyecto)
+      run: npm run build  # Cambia esto según tu proyecto
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./  # Cambia si tus archivos están en una carpeta específica
+
+    - name: Commit deploy changes
+      run: |
+        git config --global user.email "your_email@example.com"
+        git config --global user.name "Your Name"
+        git add .
+        git commit -m "Deploy to GitHub Pages"
+        git push
