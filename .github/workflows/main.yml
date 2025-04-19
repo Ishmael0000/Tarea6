@@ -1,0 +1,32 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # o la rama que estés usando para hacer deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # Ajusta a la versión de Node.js que necesites
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build project
+      run: npm run build  # Asegúrate de que tu package.json tenga este comando
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@4.1.0
+      with:
+        branch: gh-pages  # Rama donde se hará el deploy
+        folder: build     # Carpeta donde se genera el build (cambia si no es build)
+        token: ${{ secrets.GITHUB_TOKEN }}  # Token para autenticar el deploy
